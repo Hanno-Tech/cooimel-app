@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# COOIMEL — App do Associado + Painel Administrativo
 
-## Getting Started
+Portal da Cooperativa de Irrigação de Meleiro: o associado consulta e paga a taxa de irrigação
+(boleto/Pix), vê avisos e a cotação do arroz; a cooperativa administra tudo em `/admin`.
 
-First, run the development server:
+Arquitetura e decisões: [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md) · Mockups: [`mockups/`](mockups/)
+
+## Rodando localmente
+
+Requisitos: Node 24, Docker.
 
 ```bash
+npm install
+cp .env.example .env            # ajuste se necessário
+docker compose up -d            # Postgres local na porta 5433
+npm run db:migrate
+SEED_ADMIN_CPF=<cpf> SEED_ADMIN_SENHA=<senha> SEED_ADMIN_NOME="Seu nome" npm run db:seed
+npm run db:seed-demo            # opcional: associado demo com cobranças, avisos e cotações
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- App do associado: http://localhost:3000 (demo: CPF `111.444.777-35`, senha `demo1234`)
+- Painel: http://localhost:3000/admin (login com o CPF/senha do seed)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script | O que faz |
+|---|---|
+| `npm run dev` / `build` / `start` | Next.js |
+| `npm test` | Testes unitários (regras de cobrança, FEBRABAN/Pix) |
+| `npm run db:generate` | Gera migration a partir de `lib/db/schema.ts` |
+| `npm run db:migrate` | Aplica migrations |
+| `npm run db:seed` | Configuração inicial + primeiro admin |
+| `npm run db:seed-demo` | Dados de demonstração (idempotente) |
+| `npm run db:studio` | Drizzle Studio |
 
-## Learn More
+## Estrutura
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/(auth)        login, troca de senha obrigatória no 1º acesso
+app/(associado)   Telas 3–15 do mockup (PWA mobile)
+app/admin         painel desktop (associados, cobranças, pagamentos, avisos, cotação, usuários, config)
+app/api/webhooks  confirmação de pagamento do banco
+lib/domain        regras puras (valor, multa/juros, status) — com testes
+lib/payments      interface PaymentGateway + gateway mock (Cresol depois)
+lib/services      consultas e casos de uso
+lib/db            schema Drizzle + cliente
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Pagamentos (mock)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Enquanto `PAYMENT_PROVIDER=mock`, boletos e Pix são simulados (código de barras e BR Code com
+formato válido). Para confirmar um pagamento: **Admin → Simulador do banco**, ou o botão
+"Simular pagamento (ambiente de teste)" nas telas de boleto/Pix. O fluxo passa pelo mesmo
+processamento do webhook real (assinatura + idempotência).
 
-## Deploy on Vercel
+## Pendências conhecidas
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Logo oficial em vetor (hoje: ícone do mockup em SVG) e foto real para a tela de abertura (`public/img/splash.jpg` é provisória).
+- Regras de multa/juros (configuráveis em Admin → Configurações; padrão 0%).
+- Adapter Cresol (`lib/payments`).
+- Deploy na Vercel: provisionar Postgres (Neon) e Vercel Blob privado (fotos) e configurar as variáveis de `.env.example`.
