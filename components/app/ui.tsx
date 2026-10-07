@@ -4,8 +4,31 @@ import type { StatusVisual } from "@/lib/domain/cobranca";
 import { formatCompetencia, formatData } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-export function Page({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <main className={cn("flex flex-1 flex-col gap-3 p-3", className)}>{children}</main>;
+/**
+ * Contêiner das telas. Mobile: coluna com respiro de 12px. Desktop (lg): centralizado,
+ * `largura="ampla"` (padrão, listas e grades) ou `"estreita"` (formulários/detalhes).
+ */
+export function Page({
+  children,
+  className,
+  largura = "ampla",
+}: {
+  children: React.ReactNode;
+  className?: string;
+  largura?: "ampla" | "estreita";
+}) {
+  return (
+    <main
+      className={cn(
+        "flex flex-1 flex-col gap-3 p-3 lg:mx-auto lg:w-full lg:max-w-5xl lg:gap-5 lg:px-8 lg:py-8",
+        // estreita: blocos limitados, alinhados à esquerda com o título do header
+        largura === "estreita" && "lg:[&>*]:w-full lg:[&>*]:max-w-2xl",
+        className,
+      )}
+    >
+      {children}
+    </main>
+  );
 }
 
 export function AppCard({ children, className }: { children: React.ReactNode; className?: string }) {

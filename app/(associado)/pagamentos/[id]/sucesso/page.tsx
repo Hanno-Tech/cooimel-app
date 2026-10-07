@@ -22,7 +22,7 @@ export default async function SucessoPage({ params }: PageProps<"/pagamentos/[id
   return (
     <>
       <AppHeader title="Pagamento Realizado" back="/inicio" />
-      <Page>
+      <Page largura="estreita">
         <AppCard className="flex flex-col items-center gap-5 px-5 py-8">
           <div className="flex size-20 items-center justify-center rounded-full bg-brand-600 shadow-md">
             <Check className="size-11 text-white" strokeWidth={3} />

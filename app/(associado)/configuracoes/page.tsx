@@ -13,7 +13,7 @@ export default async function ConfiguracoesPage() {
   return (
     <>
       <AppHeader title="Configurações" back="/inicio" />
-      <Page>
+      <Page largura="estreita">
         <AppCard className="divide-y divide-black/5">
           <Link href="/trocar-senha" className="flex items-center gap-4 px-4 py-4 text-[15px] text-ink hover:bg-gray-50">
             <KeyRound className="size-5 text-brand-900" />
@@ -27,7 +27,7 @@ export default async function ConfiguracoesPage() {
             </button>
           </form>
         </AppCard>
-        <p className="text-center text-xs text-ink-muted">COOIMEL · Cooperativa de Irrigação de Meleiro</p>
+        <p className="text-center text-xs text-ink-muted lg:text-left">COOIMEL · Cooperativa de Irrigação de Meleiro</p>
       </Page>
     </>
   );

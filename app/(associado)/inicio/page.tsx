@@ -22,74 +22,76 @@ export default async function InicioPage() {
       <AppHeader />
       <Page>
         <div className="px-1 pt-1">
-          <h2 className="text-[22px] font-medium text-ink">
+          <h2 className="text-[22px] font-medium text-ink lg:text-3xl">
             Olá, {primeiroNome} <span aria-hidden>👋</span>
           </h2>
           <p className="text-sm text-ink-muted">Matrícula: {associado.matricula}</p>
         </div>
 
-        <AppCard className="grid grid-cols-2 divide-x divide-black/5 py-3">
-          <div className="flex items-center gap-3 px-4">
-            <Leaf className="size-8 shrink-0 fill-[#6ab42d] text-[#4f9a1f]" />
-            <div>
-              <p className="text-xs text-ink-muted">Área cadastrada</p>
-              <p className="text-xl font-bold text-ink">{formatHa(d.areaCadastrada)}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 px-4">
-            <Droplet className="size-8 shrink-0 fill-info-500 text-info-500" />
-            <div>
-              <p className="text-xs text-ink-muted">Área irrigada</p>
-              <p className="text-xl font-bold text-ink">{formatHa(d.areaIrrigada)}</p>
-            </div>
-          </div>
-        </AppCard>
-
-        {d.qtdAbertas > 0 ? (
-          <Link href="/pagamentos?filtro=abertas">
-            <div className="flex items-center gap-4 rounded-xl border border-danger-600/15 bg-danger-50 px-4 py-3.5 shadow-[0_1px_4px_rgb(0_0_0/0.06)]">
-              <CircleAlert className="size-10 shrink-0 fill-danger-600 text-white" />
+        <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-5 xl:grid-cols-3">
+          <AppCard className="grid grid-cols-2 divide-x divide-black/5 py-3 lg:col-span-2 lg:h-full lg:items-center xl:col-span-1 xl:grid-cols-1 xl:divide-x-0 xl:divide-y xl:py-1">
+            <div className="flex items-center gap-3 px-4 xl:py-2.5">
+              <Leaf className="size-8 shrink-0 fill-[#6ab42d] text-[#4f9a1f]" />
               <div>
-                <p className="text-sm text-ink">Valor em aberto</p>
-                <p className="text-2xl font-bold text-danger-600">
-                  <span className="text-xl font-medium">R$</span>{" "}
-                  {formatMoeda(d.valorAberto).replace("R$", "").trim()}
-                </p>
-                <p className="text-xs text-danger-600">
-                  {emAtraso ? "Vencido em" : "Vencimento"}: {formatData(d.proximoVencimento)}
-                  {d.qtdAbertas > 1 && ` · ${d.qtdAbertas} cobranças`}
-                </p>
+                <p className="text-xs text-ink-muted">Área cadastrada</p>
+                <p className="text-xl font-bold whitespace-nowrap text-ink">{formatHa(d.areaCadastrada)}</p>
               </div>
             </div>
-          </Link>
-        ) : (
-          <div className="flex items-center gap-4 rounded-xl border border-brand-500/15 bg-brand-50 px-4 py-3.5">
-            <PartyPopper className="size-9 shrink-0 text-brand-600" />
-            <div>
-              <p className="text-sm text-ink">Valor em aberto</p>
-              <p className="text-xl font-bold text-brand-700">Nenhuma cobrança pendente</p>
+            <div className="flex items-center gap-3 px-4 xl:py-2.5">
+              <Droplet className="size-8 shrink-0 fill-info-500 text-info-500" />
+              <div>
+                <p className="text-xs text-ink-muted">Área irrigada</p>
+                <p className="text-xl font-bold whitespace-nowrap text-ink">{formatHa(d.areaIrrigada)}</p>
+              </div>
             </div>
-          </div>
-        )}
+          </AppCard>
 
-        <div
-          className={cn(
-            "flex items-center gap-4 rounded-xl border px-4 py-3",
-            emAtraso ? "border-danger-600/15 bg-danger-50" : "border-brand-500/10 bg-brand-50",
-          )}
-        >
-          {emAtraso ? (
-            <CircleAlert className="size-10 shrink-0 fill-danger-600 text-white" />
+          {d.qtdAbertas > 0 ? (
+            <Link href="/pagamentos?filtro=abertas" className="lg:h-full">
+              <div className="flex items-center gap-4 rounded-xl border border-danger-600/15 bg-danger-50 px-4 py-3.5 shadow-[0_1px_4px_rgb(0_0_0/0.06)] transition hover:brightness-[0.98] lg:h-full">
+                <CircleAlert className="size-10 shrink-0 fill-danger-600 text-white" />
+                <div>
+                  <p className="text-sm text-ink">Valor em aberto</p>
+                  <p className="text-2xl font-bold text-danger-600">
+                    <span className="text-xl font-medium">R$</span>{" "}
+                    {formatMoeda(d.valorAberto).replace("R$", "").trim()}
+                  </p>
+                  <p className="text-xs text-danger-600">
+                    {emAtraso ? "Vencido em" : "Vencimento"}: {formatData(d.proximoVencimento)}
+                    {d.qtdAbertas > 1 && ` · ${d.qtdAbertas} cobranças`}
+                  </p>
+                </div>
+              </div>
+            </Link>
           ) : (
-            <CircleCheck className="size-10 shrink-0 fill-brand-500 text-white" />
+            <div className="flex items-center gap-4 rounded-xl border border-brand-500/15 bg-brand-50 px-4 py-3.5 lg:h-full">
+              <PartyPopper className="size-9 shrink-0 text-brand-600" />
+              <div>
+                <p className="text-sm text-ink">Valor em aberto</p>
+                <p className="text-xl font-bold text-brand-700">Nenhuma cobrança pendente</p>
+              </div>
+            </div>
           )}
-          <div>
-            <p className="text-sm text-ink">Situação</p>
-            <p className={cn("text-xl font-bold", emAtraso ? "text-danger-600" : "text-brand-600")}>{d.situacao}</p>
+
+          <div
+            className={cn(
+              "flex items-center gap-4 rounded-xl border px-4 py-3 lg:h-full",
+              emAtraso ? "border-danger-600/15 bg-danger-50" : "border-brand-500/10 bg-brand-50",
+            )}
+          >
+            {emAtraso ? (
+              <CircleAlert className="size-10 shrink-0 fill-danger-600 text-white" />
+            ) : (
+              <CircleCheck className="size-10 shrink-0 fill-brand-500 text-white" />
+            )}
+            <div>
+              <p className="text-sm text-ink">Situação</p>
+              <p className={cn("text-xl font-bold", emAtraso ? "text-danger-600" : "text-brand-600")}>{d.situacao}</p>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5">
           {[
             { href: "/pagamentos", label: "Pagamentos", icon: Files },
             { href: "/boletos", label: "Boletos", icon: FileText },
@@ -97,7 +99,7 @@ export default async function InicioPage() {
             { href: "/avisos", label: "Avisos", icon: Megaphone },
           ].map(({ href, label, icon: Icon }) => (
             <Link key={href} href={href}>
-              <AppCard className="flex h-24 flex-col items-center justify-center gap-2 transition hover:bg-brand-50">
+              <AppCard className="flex h-24 flex-col items-center justify-center gap-2 transition hover:bg-brand-50 lg:h-32">
                 <Icon className="size-8 text-brand-700" strokeWidth={2.2} />
                 <span className="text-sm font-medium text-ink">{label}</span>
               </AppCard>

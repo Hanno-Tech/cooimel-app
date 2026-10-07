@@ -19,7 +19,7 @@ export default async function AvisoPage({ params }: PageProps<"/avisos/[id]">) {
   return (
     <>
       <AppHeader title="Aviso" back="/avisos" />
-      <Page>
+      <Page largura="estreita">
         <AppCard className="space-y-4 p-5">
           <div className="flex items-center gap-3">
             <AvisoIcon tipo={a.tipo} className="size-12" />

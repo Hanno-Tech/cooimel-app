@@ -29,25 +29,29 @@ export default async function HistoricoPage({ searchParams }: PageProps<"/histor
     <>
       <AppHeader title="Histórico de Pagamentos" back="/inicio" />
       <Page>
-        <SegmentedTabs ativo={aba} items={ABAS.map((a) => ({ ...a, href: `/historico?forma=${a.value}` }))} />
+        <div className="lg:w-[420px]">
+          <SegmentedTabs ativo={aba} items={ABAS.map((a) => ({ ...a, href: `/historico?forma=${a.value}` }))} />
+        </div>
         {pagamentos.length === 0 ? (
           <EmptyState icon={<History className="size-10" />} title="Nenhum pagamento registrado" />
         ) : (
-          pagamentos.map((p) => (
-            <ChargeListItem
-              key={p.id}
-              dataLabel={formatDataHora(p.pagoEm).slice(0, 10)}
-              item={{
-                id: p.id,
-                descricao: p.descricao,
-                vencimento: hojeISO(p.pagoEm),
-                valor: p.valorPagoCentavos,
-                status: "paga",
-                propriedade: variasProps ? p.propriedade : null,
-                href: `/pagamentos/${p.cobrancaId}`,
-              }}
-            />
-          ))
+          <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
+            {pagamentos.map((p) => (
+              <ChargeListItem
+                key={p.id}
+                dataLabel={formatDataHora(p.pagoEm).slice(0, 10)}
+                item={{
+                  id: p.id,
+                  descricao: p.descricao,
+                  vencimento: hojeISO(p.pagoEm),
+                  valor: p.valorPagoCentavos,
+                  status: "paga",
+                  propriedade: variasProps ? p.propriedade : null,
+                  href: `/pagamentos/${p.cobrancaId}`,
+                }}
+              />
+            ))}
+          </div>
         )}
       </Page>
     </>

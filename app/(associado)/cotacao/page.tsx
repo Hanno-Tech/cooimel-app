@@ -24,10 +24,17 @@ export default async function CotacaoPage() {
         {!atual ? (
           <EmptyState icon={<Wheat className="size-10" />} title="Nenhuma cotação publicada ainda" />
         ) : (
-          <>
+          <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
             <AppCard className="overflow-hidden">
-              <div className="relative h-24 w-full">
-                <Image src="/img/arroz.jpg" alt="Lavoura de arroz" fill sizes="430px" className="object-cover" priority />
+              <div className="relative h-24 w-full lg:h-36">
+                <Image
+                  src="/img/arroz.jpg"
+                  alt="Lavoura de arroz"
+                  fill
+                  sizes="(min-width: 1024px) 480px, 430px"
+                  className="object-cover"
+                  priority
+                />
               </div>
               <div className="space-y-1 p-4">
                 <p className="text-[15px] font-medium text-ink">
@@ -38,7 +45,7 @@ export default async function CotacaoPage() {
                 <p className="pt-2 text-xs text-ink-muted">Atualizado em: {formatDataHora(atual.referenciaEm)}</p>
                 <a
                   href="#historico"
-                  className="mt-3 flex h-11 items-center justify-center gap-2 rounded-lg border border-black/10 text-[15px] font-medium text-brand-900 hover:bg-gray-50"
+                  className="mt-3 flex h-11 lg:hidden items-center justify-center gap-2 rounded-lg border border-black/10 text-[15px] font-medium text-brand-900 hover:bg-gray-50"
                 >
                   <ChartNoAxesColumnIncreasing className="size-5 text-brand-500" strokeWidth={2.6} />
                   Histórico de cotações
@@ -51,29 +58,31 @@ export default async function CotacaoPage() {
               </div>
             </AppCard>
 
-            <h2 id="historico" className="scroll-mt-16 px-1 pt-2 text-sm font-medium text-ink">
-              Histórico de cotações
-            </h2>
-            <AppCard className="divide-y divide-black/5">
-              {lista.map((c, i) => {
-                const anterior = lista[i + 1];
-                const diff = anterior ? c.valorCentavos - anterior.valorCentavos : 0;
-                return (
-                  <div key={c.id} className="flex items-center justify-between px-4 py-3 text-sm">
-                    <div>
-                      <p className="text-ink">{formatDataHora(c.referenciaEm).slice(0, 10)}</p>
-                      <p className="text-xs text-ink-muted">{c.fonte}</p>
+            <div className="flex flex-col gap-3">
+              <h2 id="historico" className="scroll-mt-16 px-1 pt-2 text-sm font-medium text-ink lg:pt-0 lg:text-base">
+                Histórico de cotações
+              </h2>
+              <AppCard className="divide-y divide-black/5">
+                {lista.map((c, i) => {
+                  const anterior = lista[i + 1];
+                  const diff = anterior ? c.valorCentavos - anterior.valorCentavos : 0;
+                  return (
+                    <div key={c.id} className="flex items-center justify-between px-4 py-3 text-sm">
+                      <div>
+                        <p className="text-ink">{formatDataHora(c.referenciaEm).slice(0, 10)}</p>
+                        <p className="text-xs text-ink-muted">{c.fonte}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {diff > 0 && <TrendingUp className="size-4 text-brand-500" />}
+                        {diff < 0 && <TrendingDown className="size-4 text-danger-600" />}
+                        <span className="font-medium text-ink">{formatMoeda(c.valorCentavos)}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      {diff > 0 && <TrendingUp className="size-4 text-brand-500" />}
-                      {diff < 0 && <TrendingDown className="size-4 text-danger-600" />}
-                      <span className="font-medium text-ink">{formatMoeda(c.valorCentavos)}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </AppCard>
-          </>
+                  );
+                })}
+              </AppCard>
+            </div>
+          </div>
         )}
       </Page>
     </>

@@ -36,11 +36,17 @@ export default async function PagamentosPage({ searchParams }: PageProps<"/pagam
     <>
       <AppHeader title="Pagamentos" back="/inicio" />
       <Page>
-        <SegmentedTabs
-          ativo={filtro}
-          items={FILTROS.map((f) => ({ ...f, href: `/pagamentos?filtro=${f.value}&ano=${ano}` }))}
-        />
-        <YearSelect anos={anos.length ? anos : [anoAtual]} ano={ano} filtro={filtro} />
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+          <div className="lg:w-[420px]">
+            <SegmentedTabs
+              ativo={filtro}
+              items={FILTROS.map((f) => ({ ...f, href: `/pagamentos?filtro=${f.value}&ano=${ano}` }))}
+            />
+          </div>
+          <div className="lg:w-40">
+            <YearSelect anos={anos.length ? anos : [anoAtual]} ano={ano} filtro={filtro} />
+          </div>
+        </div>
         {cobrancas.length === 0 ? (
           <EmptyState
             icon={<CalendarCheck className="size-10" />}
@@ -48,20 +54,22 @@ export default async function PagamentosPage({ searchParams }: PageProps<"/pagam
             text={filtro === "abertas" ? "Você não tem cobranças em aberto neste ano." : undefined}
           />
         ) : (
-          cobrancas.map((c) => (
-            <ChargeListItem
-              key={c.id}
-              item={{
-                id: c.id,
-                descricao: c.descricao,
-                vencimento: c.vencimento,
-                valor: c.encargos.total,
-                status: c.statusVisual,
-                propriedade: variasProps ? c.propriedade.nome : null,
-                href: `/pagamentos/${c.id}`,
-              }}
-            />
-          ))
+          <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
+            {cobrancas.map((c) => (
+              <ChargeListItem
+                key={c.id}
+                item={{
+                  id: c.id,
+                  descricao: c.descricao,
+                  vencimento: c.vencimento,
+                  valor: c.encargos.total,
+                  status: c.statusVisual,
+                  propriedade: variasProps ? c.propriedade.nome : null,
+                  href: `/pagamentos/${c.id}`,
+                }}
+              />
+            ))}
+          </div>
         )}
       </Page>
     </>

@@ -29,25 +29,27 @@ export default async function BoletosPage() {
             text="Quando houver uma nova cobrança, o boleto aparecerá aqui."
           />
         ) : (
-          abertas.map((c) => (
-            <Link key={c.id} href={`/pagamentos/${c.id}/boleto`}>
-              <AppCard className="flex items-center gap-3 px-4 py-4 transition hover:bg-gray-50">
-                <FileText className="size-9 shrink-0 text-brand-900" strokeWidth={1.8} />
-                <div className="min-w-0 flex-1 text-sm">
-                  <p className="font-medium text-ink">{c.descricao}</p>
-                  <p className="text-ink-muted">
-                    Comp. {formatCompetencia(c.competencia)} · Venc. {formatData(c.vencimento)}
-                  </p>
-                  {variasProps && <p className="truncate text-xs text-ink-muted">{c.propriedade.nome}</p>}
-                </div>
-                <div className="text-right text-sm">
-                  <p className="font-medium text-ink">{formatMoeda(c.encargos.total)}</p>
-                  <p className={cn("font-medium", statusCor(c.statusVisual))}>{STATUS_LABEL[c.statusVisual]}</p>
-                </div>
-                <ChevronRight className="-mr-1 size-4 text-ink-muted/60" />
-              </AppCard>
-            </Link>
-          ))
+          <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
+            {abertas.map((c) => (
+              <Link key={c.id} href={`/pagamentos/${c.id}/boleto`}>
+                <AppCard className="flex items-center gap-3 px-4 py-4 transition hover:bg-gray-50 lg:h-full">
+                  <FileText className="size-9 shrink-0 text-brand-900" strokeWidth={1.8} />
+                  <div className="min-w-0 flex-1 text-sm">
+                    <p className="font-medium text-ink">{c.descricao}</p>
+                    <p className="text-ink-muted">
+                      Comp. {formatCompetencia(c.competencia)} · Venc. {formatData(c.vencimento)}
+                    </p>
+                    {variasProps && <p className="truncate text-xs text-ink-muted">{c.propriedade.nome}</p>}
+                  </div>
+                  <div className="text-right text-sm">
+                    <p className="font-medium text-ink">{formatMoeda(c.encargos.total)}</p>
+                    <p className={cn("font-medium", statusCor(c.statusVisual))}>{STATUS_LABEL[c.statusVisual]}</p>
+                  </div>
+                  <ChevronRight className="-mr-1 size-4 text-ink-muted/60" />
+                </AppCard>
+              </Link>
+            ))}
+          </div>
         )}
       </Page>
     </>

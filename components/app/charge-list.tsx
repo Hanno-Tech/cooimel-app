@@ -19,7 +19,7 @@ export type ChargeItem = {
 export function ChargeListItem({ item, dataLabel }: { item: ChargeItem; dataLabel?: string }) {
   return (
     <Link href={item.href}>
-      <AppCard className="flex items-center gap-3 px-4 py-4 transition hover:bg-gray-50">
+      <AppCard className="flex items-center gap-3 px-4 py-4 transition hover:bg-gray-50 lg:h-full">
         <StatusIcon status={item.status} />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-ink">{item.descricao}</p>
