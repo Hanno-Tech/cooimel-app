@@ -9,10 +9,12 @@ export const metadata = { title: "Novo associado" };
 
 export default async function NovoAssociadoPage() {
   await requireAdmin();
-  // Sugere a próxima matrícula numérica (ex.: 0126).
+  // Sugere a próxima matrícula numérica (ex.: 0126). Considera só matrículas
+  // puramente numéricas de até 9 dígitos — valores livres maiores estourariam o ::int.
   const [r] = await db
-    .select({ max: sql<number>`coalesce(max(nullif(regexp_replace(${schema.associado.matricula}, '\\D', '', 'g'), '')::int), 0)`.mapWith(Number) })
-    .from(schema.associado);
+    .select({ max: sql<number>`coalesce(max(${schema.associado.matricula}::int), 0)`.mapWith(Number) })
+    .from(schema.associado)
+    .where(sql`${schema.associado.matricula} ~ '^[0-9]{1,9}$'`);
   const sugestao = String((r?.max ?? 0) + 1).padStart(4, "0");
 
   return (
